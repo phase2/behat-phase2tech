@@ -45,7 +45,7 @@ class FeatureContext extends Behat\MinkExtension\Context\MinkContext {
     }
 
     return array(
-      new Step\Given('I go to "' . $favicon_url . '"'),
+      new Step\Given(sprintf('I go to "%s"', $favicon_url)),
       new Step\Then('the response status code should not be 404'),
     );
   }
