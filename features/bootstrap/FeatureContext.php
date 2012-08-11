@@ -7,7 +7,8 @@
 use Behat\Behat\Context\ClosuredContextInterface,
 Behat\Behat\Context\TranslatedContextInterface,
 Behat\Behat\Context\BehatContext,
-Behat\Behat\Exception\PendingException;
+Behat\Behat\Exception\PendingException,
+Behat\Behat\Context\Step;
 use Behat\Gherkin\Node\PyStringNode,
   Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
@@ -21,7 +22,7 @@ use Behat\MinkExtension\Context\MinkContext;
 /**
  * Features context.
  */
-class FeatureContext extends BehatContext {
+class FeatureContext extends Behat\MinkExtension\Context\MinkContext {
   /**
    * Initializes context.
    * Every scenario gets it's own context object.
@@ -30,6 +31,22 @@ class FeatureContext extends BehatContext {
    *   context parameters (set them up through behat.yml)
    */
   public function __construct(array $parameters) {
-    $this->useContext('mink', new MinkContext($kernel));
+  }
+
+  /**
+   * @Then /^the favicon should be found$/
+   */
+  public function theFaviconShouldBeFound() {
+    if ($favicon_link = $this->getSession()->getPage()->find('css', 'link[rel="shortcut icon"]')) {
+      $favicon_url = $favicon_link->getAttribute('href');
+    }
+    else {
+      $favicon_url = "/favicon.ico";
+    }
+
+    return array(
+      new Step\Given('I go to "' . $favicon_url . '"'),
+      new Step\Then('the response status code should not be 404'),
+    );
   }
 }
