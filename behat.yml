@@ -3,3 +3,6 @@ default:
         Behat\MinkExtension\Extension:
             base_url: http://www.phase2technology.com/
             goutte: ~
+            selenium2:
+              browser: "googlechrome"
+            javascript_session: selenium2
